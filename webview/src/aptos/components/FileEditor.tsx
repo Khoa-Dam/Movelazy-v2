@@ -33,11 +33,19 @@ export function FileEditor({ files }: FileEditorProps) {
         content: code
       };
 
+      const requestData = {
+        messages: [message],
+        show_intermediate_steps: false
+      };
+
+      // Log the request
+      console.log('🤖 Calling AI with data:', {
+        content: code,
+        inputs: inputs
+      });
+
       const response = await axios.post("http://localhost:3000/api",
-        {
-          messages: [message],  // Wrap message in array as server expects
-          show_intermediate_steps: false
-        },
+        requestData,
         {
           headers: {
             'Content-Type': 'application/json'
@@ -47,28 +55,42 @@ export function FileEditor({ files }: FileEditorProps) {
 
       // Handle plain text response
       if (typeof response.data === 'string') {
+        console.log('📝 Received plain text response:', response.data);
         setResult(response.data);
       }
       // Handle stream response
       else if (response.data.getReader) {
+        console.log('📡 Receiving streaming response...');
         const reader = response.data.getReader();
         const decoder = new TextDecoder();
+        let fullResponse = '';
 
         while (true) {
           const { done, value } = await reader.read();
           if (done) break;
 
           const chunk = decoder.decode(value, { stream: true });
+          fullResponse += chunk;
           setResult(prev => prev + chunk);
         }
+
+        console.log('📦 Complete stream response:', fullResponse);
       }
 
     } catch (error) {
-      console.error("Error running code:", error);
+      console.error("❌ Error running code:", error);
+      if (axios.isAxiosError(error)) {
+        console.error("🔍 Response details:", {
+          status: error.response?.status,
+          statusText: error.response?.statusText,
+          data: error.response?.data
+        });
+      }
       setResult(
         `Error: ${axios.isAxiosError(error) ? error.message : "Unknown error occurred"}`
       );
     } finally {
+      console.log('✅ AI call completed');
       setIsRunning(false);
     }
   };

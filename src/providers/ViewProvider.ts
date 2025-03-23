@@ -16,7 +16,6 @@ import compile from "../contract/aptos/compile";
 import { checkProfile, deploy } from "../contract/aptos/deploy";
 import { createFileSystem } from "../lib/filesystem"; // Import FileSystem
 
-
 export class ViewProvider implements vscode.WebviewViewProvider {
   public static readonly viewType = "MovelazyView";
   private readonly solidityService: SolidityService;
@@ -281,7 +280,7 @@ export class ViewProvider implements vscode.WebviewViewProvider {
     script-src ${webview.cspSource} 'unsafe-inline'; 
     style-src ${webview.cspSource} 'unsafe-inline' https://fonts.googleapis.com; 
     font-src ${webview.cspSource} https://fonts.gstatic.com; 
-    connect-src ${webview.cspSource} https://fullnode.devnet.aptoslabs.com;">
+    connect-src ${webview.cspSource} https://fullnode.devnet.aptoslabs.com http://localhost:3000/api;">
       <title>MoveLazy</title>
       <link href="${styleUri}" rel="stylesheet">
       <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
