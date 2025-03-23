@@ -5,7 +5,11 @@
   "publisher": "Movelazy",
   "description": "Simplify the Development of Move Contracts on Movement",
   "license": "MIT",
-  "version": "1.0.0",
+  "version": "1.0.1",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Khoa-Dam/Movelazy-v2.git"
+  },
   "engines": {
     "vscode": "^1.93.0"
   },
